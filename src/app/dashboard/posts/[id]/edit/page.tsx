@@ -44,8 +44,12 @@ export default function EditPostPage() {
           coverImage: post.coverImage ?? "",
           categoryId: post.categoryId,
         });
-      } catch (e: any) {
-        setError(e.message || "Failed to load data");
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          setError(e.message);
+        } else {
+          setError("Failed to load data");
+        }
       } finally {
         setIsLoading(false);
       }
@@ -67,8 +71,12 @@ export default function EditPostPage() {
         throw new Error(j.error || "Failed to update post");
       }
       router.push("/dashboard/posts");
-    } catch (e: any) {
-      setError(e.message || "Failed to update post");
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        setError(e.message);
+      } else {
+        setError("Failed to update post");
+      }
     } finally {
       setIsLoading(false);
     }
