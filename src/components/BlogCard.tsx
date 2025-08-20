@@ -5,7 +5,7 @@ import { BlogPost } from "@prisma/client";
 interface BlogCardProps {
   post: BlogPost & {
     category: { name: string; slug: string };
-    author: { name: string };
+    author: { name: string | null }; // <-- allow null
   };
 }
 
@@ -27,7 +27,9 @@ export default function BlogCard({ post }: BlogCardProps) {
           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
             {post.category.name}
           </span>
-          <span className="text-sm text-gray-500">by {post.author.name}</span>
+          <span className="text-sm text-gray-500">
+            by {post.author.name ?? "Unknown Author"}
+          </span>
         </div>
         <h3 className="text-xl font-semibold text-gray-900 mb-2 line-clamp-2">
           <Link href={`/blog/${post.slug}`} className="hover:text-blue-600">

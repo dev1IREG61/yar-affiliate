@@ -1,14 +1,15 @@
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
-  request: Request,
-  { params }: { params: { slug: string } }
+  request: NextRequest,
+  context: { params: Promise<{ slug: string }> }
 ) {
+  const { slug } = await context.params;
   try {
     const link = await db.affiliateLink.findUnique({
-      where: { slug: params.slug },
+      where: { slug },
     });
 
     if (!link) {

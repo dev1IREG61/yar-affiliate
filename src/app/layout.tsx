@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
@@ -43,25 +44,28 @@ export default function RootLayout({
                     </h4>
                     <ul className="space-y-2">
                       <li>
-                        <a href="/" className="text-gray-300 hover:text-white">
+                        <Link
+                          href="/"
+                          className="text-gray-300 hover:text-white"
+                        >
                           Home
-                        </a>
+                        </Link>
                       </li>
                       <li>
-                        <a
+                        <Link
                           href="/blog"
                           className="text-gray-300 hover:text-white"
                         >
                           Blog
-                        </a>
+                        </Link>
                       </li>
                       <li>
-                        <a
+                        <Link
                           href="/categories"
                           className="text-gray-300 hover:text-white"
                         >
                           Categories
-                        </a>
+                        </Link>
                       </li>
                     </ul>
                   </div>
@@ -71,28 +75,28 @@ export default function RootLayout({
                     </h4>
                     <ul className="space-y-2">
                       <li>
-                        <a
+                        <Link
                           href="/privacy"
                           className="text-gray-300 hover:text-white"
                         >
                           Privacy Policy
-                        </a>
+                        </Link>
                       </li>
                       <li>
-                        <a
+                        <Link
                           href="/terms"
                           className="text-gray-300 hover:text-white"
                         >
                           Terms of Service
-                        </a>
+                        </Link>
                       </li>
                       <li>
-                        <a
+                        <Link
                           href="/disclosure"
                           className="text-gray-300 hover:text-white"
                         >
                           Affiliate Disclosure
-                        </a>
+                        </Link>
                       </li>
                     </ul>
                   </div>

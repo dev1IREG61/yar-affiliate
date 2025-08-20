@@ -6,16 +6,18 @@ import { slugify } from "@/lib/slug";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await context.params;
+
     const session = await getAuthSession();
     if (!session || session.user.role !== "ADMIN") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const post = await db.blogPost.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         category: true,
         author: true,
@@ -39,11 +41,12 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await getAuthSession();
+    const { id } = await context.params;
 
+    const session = await getAuthSession();
     if (!session || session.user.role !== "ADMIN") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -58,7 +61,7 @@ export async function PUT(
     const existingPost = await db.blogPost.findFirst({
       where: {
         slug,
-        id: { not: params.id },
+        id: { not: id },
       },
     });
 
@@ -70,7 +73,7 @@ export async function PUT(
     }
 
     const post = await db.blogPost.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         ...data,
         slug,
@@ -90,17 +93,18 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await getAuthSession();
+    const { id } = await context.params;
 
+    const session = await getAuthSession();
     if (!session || session.user.role !== "ADMIN") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     await db.blogPost.delete({
-      where: { id: params.id },
+      where: { id },
     });
 
     return NextResponse.json({ message: "Post deleted successfully" });

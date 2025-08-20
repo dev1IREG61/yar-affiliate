@@ -6,12 +6,14 @@ import { slugify } from "@/lib/slug";
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await context.params; // ✅ await it
+
   try {
     const session = await getAuthSession();
 
-    if (!session || session.user.role !== "ADMIN") {
+    if (!session || !session.user || session.user.role !== "ADMIN") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -25,7 +27,7 @@ export async function PUT(
     const existingLink = await db.affiliateLink.findFirst({
       where: {
         slug,
-        id: { not: params.id },
+        id: { not: id },
       },
     });
 
@@ -37,7 +39,7 @@ export async function PUT(
     }
 
     const link = await db.affiliateLink.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         ...data,
         slug,
@@ -58,8 +60,10 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await context.params; // ✅ await it
+
   try {
     const session = await getAuthSession();
 
@@ -68,7 +72,7 @@ export async function DELETE(
     }
 
     await db.affiliateLink.delete({
-      where: { id: params.id },
+      where: { id },
     });
 
     return NextResponse.json({ message: "Link deleted successfully" });
